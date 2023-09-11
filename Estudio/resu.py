@@ -67,8 +67,8 @@ if uploaded_file:
     st.subheader("Generación de Resúmenes:")
     for section in sections:
         if section.strip():  # Ignorar secciones vacías
-            st.write(
-                f"Sección original: {section[:100]}...")  # Muestra los primeros 100 caracteres de la sección original
+            #st.write(
+               # f"Sección original: {section[:100]}...")  # Muestra los primeros 100 caracteres de la sección original
             # Genera un resumen de la sección
             summary = generate_summary(section)
             st.write(f"Resumen de la sección: {summary}")

@@ -1,16 +1,18 @@
-import streamlit as st
-from transformers import pipeline
-from pdf2image import convert_from_bytes
-from bs4 import BeautifulSoup
+import streamlit as st # aplicaciones web interactivas
+from transformers import pipeline # pipeline crear un objeto que permite realizar preguntas y respuestas
+from pdf2image import convert_from_bytes # se utiliza para convertir páginas de archivos PDF en imágenes.
+from bs4 import BeautifulSoup # biblioteca para analizar y manipular documentos HTML y XML.
 
 st.title("Sistema de Clasificación de Documentos")
 
 # Carga el modelo preentrenado de Zero-shot
+# el modelo realiza tareas de clasificación en varios idiomas.
+
 model_name = "facebook/bart-large-mnli"
 classifier = pipeline("zero-shot-classification", model=model_name)
 
 
-# Función para procesar archivos PDF
+# Función para procesar archivos PDF y devuelve como cadena de texto
 def process_pdf(file):
     pdf_bytes = file.read()
     pages = convert_from_bytes(pdf_bytes)
@@ -20,7 +22,7 @@ def process_pdf(file):
     return text
 
 
-# Función para procesar archivos HTML
+# Función para procesar archivos HTML y devuelve como cadena de texto sin etiquetas html
 def process_html(file):
     html_content = file.read()
     soup = BeautifulSoup(html_content, "html.parser")
@@ -31,6 +33,7 @@ def process_html(file):
 # Función para dividir el texto en secciones
 def split_text(text):
     # Dividir el texto en secciones (aquí se usa un criterio simple)
+    # las secciones en el texto están separadas por al menos dos líneas en blanco.
     sections = text.split("\n\n")  # Puedes ajustar el criterio de división según tus documentos
     return sections
 
@@ -59,5 +62,5 @@ if uploaded_file:
     for section in sections:
         if section.strip():  # Ignorar secciones vacías
             result = classifier(section, labels)
-            st.write(f"Sección: {section[:100]}...")  # Mostrar los primeros 100 caracteres de la sección
+            #st.write(f"Sección: {section[:100]}...")  # Mostrar los primeros 100 caracteres de la sección
             st.write(f"Clase predicha: {result['labels'][0]}\n")
